@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useCompletion } from 'ai/react';
+import { useCompletion } from "ai/react";
 
 export default function Chat() {
+  //useCompletion is a utility designed to handle text completion and the state of prompt inputs.
   const { completion, input, handleInputChange, handleSubmit, error, data } =
     useCompletion();
 
