@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardBody } from "@nextui-org/react";
 import { ChatGPTMessage } from "@/types";
 import MarkdownLite from "./MarkdownLite";
+import { cn } from "@/lib/utils";
 
 interface ChatBubbleProps {
   className?: string;
@@ -10,15 +11,37 @@ interface ChatBubbleProps {
 
 const ChatBubble: React.FC<ChatBubbleProps> = (props) => {
   const { message } = props;
-
+  const isAsistant = message.role === "assistant";
   const bubbleClass =
     message.role === "assistant"
-      ? "loat-left bg-gray-200 text-black"
-      : "loat-right bg-blue-400 text-white";
+      ? "float-left bg-gray-200 text-black"
+      : "float-right bg-blue-400 text-white";
+
   return (
-    <Card className="mb-2">
+    <Card
+      className={cn("flex mb-5 items-end", {
+        "float-left max-w-fit": isAsistant,
+        "justify-end max-w-fit": !isAsistant,
+      })}
+    >
       <CardBody className={bubbleClass}>
-        <MarkdownLite text={message.content} />
+        <div
+          className={cn("flex items-end", {
+            "justify-end": isAsistant,
+          })}
+        >
+          <div
+            className={cn(
+              "flex flex-col space-y-2 max-w-xs mx-2 overflow-x-hidden",
+              {
+                "items-end": isAsistant,
+                "items-start": !isAsistant,
+              }
+            )}
+          >
+            <MarkdownLite text={message.content} />
+          </div>
+        </div>
       </CardBody>
     </Card>
   );
