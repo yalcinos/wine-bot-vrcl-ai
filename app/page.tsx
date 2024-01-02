@@ -52,8 +52,6 @@ export default function Chat() {
             loading={isLoading}
             onChange={handleInputChange}
             placeholder="Say something... "
-            tenantId={tenantId}
-            websiteUrl={websiteUrl}
           />
         </form>
       </div>
