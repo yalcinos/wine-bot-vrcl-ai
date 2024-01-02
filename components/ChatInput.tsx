@@ -21,10 +21,11 @@ const ChatInput: React.FC<ChatInputProps> = (props: any) => {
           value={value}
           disabled={isLoading}
           labelPlacement="outside"
+          autoComplete="off"
           onChange={onChange}
           endContent={
             isLoading ? (
-              <Spinner className="animate-spin" size="sm" color="secondary" />
+              <Spinner className="animate-spin" size="sm" color="primary" />
             ) : (
               <ArrowRight />
             )

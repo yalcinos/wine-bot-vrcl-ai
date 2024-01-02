@@ -17,7 +17,7 @@ export const wineProductData = (productInfos: any, websiteUrl: string) => {
                 }
                 ${product?.variants?.map((variant: any) => {
                   if (variant.price) {
-                    return `<price>${variant.price}</price>`;
+                    return `<price>${variant.price.toFixed(2)}</price>`;
                   } else return "";
                 })}
                 <availability>in stock</availability>
