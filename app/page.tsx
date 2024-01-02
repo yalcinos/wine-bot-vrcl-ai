@@ -1,6 +1,8 @@
 "use client";
 
+import ChatBubble from "@/components/ChatBubble";
 import ChatInput from "@/components/ChatInput";
+
 import { Spinner } from "@nextui-org/react";
 import { useChat } from "ai/react";
 
@@ -13,14 +15,11 @@ export default function Chat() {
         websiteUrl: "https://spectrawinery.template.commerce7.com/",
       },
     });
-  console.log("Use message", isLoading);
+  console.log("Use message", messages);
   return (
     <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
       {messages.map((m) => (
-        <div key={m.id} className="whitespace-pre-wrap">
-          {m.role === "user" ? "User: " : "AI: "}
-          {m.content}
-        </div>
+        <ChatBubble key={m.id} message={m} />
       ))}
 
       <form onSubmit={handleSubmit}>
@@ -31,10 +30,6 @@ export default function Chat() {
           onChange={handleInputChange}
           placeholder="Say something... "
         />
-        {isLoading && <Spinner size="sm" color="primary" />}
-        {/* // className="fixed bottom-0 w-full max-w-md p-2 mb-8 border
-        border-gray-300 rounded shadow-xl" // value={input}
-        // placeholder="Say something..." // onChange={handleInputChange} */}
       </form>
     </div>
   );
