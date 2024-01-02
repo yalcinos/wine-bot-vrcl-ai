@@ -4,8 +4,22 @@ import ChatBubble from "@/components/ChatBubble";
 import ChatInput from "@/components/ChatInput";
 import { cn } from "@/lib/utils";
 import { useChat } from "ai/react";
+import { useSearchParams } from "next/navigation";
 
 export default function Chat() {
+  const searchParams = useSearchParams();
+
+  const tenantId = searchParams.get("tenantId");
+  const customerId = searchParams.get("customerId");
+
+  const websiteUrl =
+    window.location != window.parent.location
+      ? document.referrer
+      : document.location.href;
+
+  console.log("test", tenantId, customerId);
+  console.log("websiteUrl", websiteUrl);
+
   //useChat is a utility to allow you to easily create a conversational user interface for your chatbot application. It enables the streaming of chat messages from your AI provider, manages the state for chat input, and updates the UI automatically as new messages are received.
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
@@ -13,11 +27,11 @@ export default function Chat() {
         { id: "1", role: "assistant", content: "Welcome to Commerce7 AI Bot!" },
       ],
       body: {
-        tenantId: "spectrawinery",
-        websiteUrl: "https://spectrawinery.template.commerce7.com/",
+        tenantId: tenantId,
+        websiteUrl: websiteUrl,
       },
     });
-  console.log({ isLoading });
+
   return (
     <div className="overflow-y-hidden">
       <div className="flex flex-col max-w-md h-screen py-24 mx-auto overflow-y-auto">
@@ -38,6 +52,8 @@ export default function Chat() {
             loading={isLoading}
             onChange={handleInputChange}
             placeholder="Say something... "
+            tenantId={tenantId}
+            websiteUrl={websiteUrl}
           />
         </form>
       </div>
