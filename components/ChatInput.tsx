@@ -5,13 +5,13 @@ import { ArrowRight } from "./icons/ArrowRight";
 interface ChatInputProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
-  isLoading: boolean;
+  loading: boolean;
   className?: string;
   value: string;
 }
 
 const ChatInput: React.FC<ChatInputProps> = (props: any) => {
-  const { onChange, placeholder, value, isLoading } = props;
+  const { onChange, placeholder, value, loading } = props;
   return (
     <div className="flex flex-col gap-4" {...props}>
       <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
@@ -19,12 +19,12 @@ const ChatInput: React.FC<ChatInputProps> = (props: any) => {
           type="text"
           placeholder={placeholder}
           value={value}
-          disabled={isLoading}
+          disabled={loading}
           labelPlacement="outside"
           autoComplete="off"
           onChange={onChange}
           endContent={
-            isLoading ? (
+            loading ? (
               <Spinner className="animate-spin" size="sm" color="primary" />
             ) : (
               <ArrowRight />
