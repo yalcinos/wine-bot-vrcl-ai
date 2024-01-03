@@ -2,6 +2,7 @@
 
 import ChatBubble from "@/components/ChatBubble";
 import ChatInput from "@/components/ChatInput";
+import { ScrollToAnchor } from "@/components/ScrollToAnchor";
 import { cn } from "@/lib/utils";
 import { useChat } from "ai/react";
 import { useSearchParams } from "next/navigation";
@@ -31,7 +32,7 @@ export default function Chat() {
 
   return (
     <div className="overflow-y-hidden">
-      <div className="max-w-md h-[90vh] pt-24 mx-auto overflow-y-auto">
+      <div className="max-w-md h-[95vh] pt-24 mx-auto overflow-y-auto">
         {messages.map((m) => (
           <div
             key={m.id}
@@ -42,6 +43,7 @@ export default function Chat() {
             <ChatBubble message={m} />
           </div>
         ))}
+        <ScrollToAnchor trackVisibility={isLoading} />
       </div>
       <div className="flex flex-col max-w-md mx-auto">
         <form onSubmit={handleSubmit}>
