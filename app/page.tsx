@@ -32,7 +32,7 @@ export default function Chat() {
 
   return (
     <div className="overflow-y-hidden">
-      <div className="max-w-md h-[95vh] pt-24 mx-auto overflow-y-auto">
+      <div className="max-w-md h-[90vh] pt-8 mx-auto overflow-y-auto">
         {messages.map((m) => (
           <div
             key={m.id}
