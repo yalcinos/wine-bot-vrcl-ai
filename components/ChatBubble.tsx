@@ -31,13 +31,10 @@ const ChatBubble: React.FC<ChatBubbleProps> = (props) => {
           })}
         >
           <div
-            className={cn(
-              "flex flex-col space-y-2 max-w-xs mx-2 overflow-x-hidden",
-              {
-                "items-end": isAsistant,
-                "items-start": !isAsistant,
-              }
-            )}
+            className={cn(" space-y-2 max-w-xs mx-2 overflow-x-hidden", {
+              "items-end": isAsistant,
+              "items-start": !isAsistant,
+            })}
           >
             <div>
               <MarkdownLite text={message.content} />

@@ -17,9 +17,6 @@ export default function Chat() {
       ? document.referrer
       : document.location.href;
 
-  console.log("test", tenantId, customerId);
-  console.log("websiteUrl", websiteUrl);
-
   //useChat is a utility to allow you to easily create a conversational user interface for your chatbot application. It enables the streaming of chat messages from your AI provider, manages the state for chat input, and updates the UI automatically as new messages are received.
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
@@ -34,7 +31,7 @@ export default function Chat() {
 
   return (
     <div className="overflow-y-hidden">
-      <div className="flex flex-col max-w-md h-screen py-24 mx-auto overflow-y-auto">
+      <div className="max-w-md h-[90vh]  mx-auto overflow-y-auto">
         {messages.map((m) => (
           <div
             key={m.id}
@@ -45,9 +42,11 @@ export default function Chat() {
             <ChatBubble message={m} />
           </div>
         ))}
+      </div>
+      <div className="flex flex-col max-w-md mx-auto">
         <form onSubmit={handleSubmit}>
           <ChatInput
-            className="disabled:opacity-50 fixed bottom-0 w-full max-w-md p-2 mb-8  rounded shadow-xl"
+            className="flex disabled:opacity-50 fixed bottom-0 w-full max-w-md p-2 mb-8  rounded shadow-xl"
             value={input}
             loading={isLoading}
             onChange={handleInputChange}
