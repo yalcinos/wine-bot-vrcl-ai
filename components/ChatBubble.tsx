@@ -19,7 +19,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = (props) => {
 
   return (
     <Card
-      className={cn("flex mb-5 items-end", {
+      className={cn("flex mb-5 mx-5 items-end", {
         "float-left max-w-fit": isAsistant,
         "justify-end max-w-fit": !isAsistant,
       })}
