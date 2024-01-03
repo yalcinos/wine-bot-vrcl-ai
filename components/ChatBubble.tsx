@@ -39,7 +39,9 @@ const ChatBubble: React.FC<ChatBubbleProps> = (props) => {
               }
             )}
           >
-            <MarkdownLite text={message.content} />
+            <div>
+              <MarkdownLite text={message.content} />
+            </div>
           </div>
         </div>
       </CardBody>
