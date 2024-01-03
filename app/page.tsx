@@ -46,7 +46,7 @@ export default function Chat() {
       <div className="flex flex-col max-w-md mx-auto">
         <form onSubmit={handleSubmit}>
           <ChatInput
-            className="flex disabled:opacity-50 fixed bottom-0 w-full max-w-md p-2 mb-8  rounded shadow-xl"
+            className="flex disabled:opacity-50 fixed bottom-0 w-full max-w-md p-2  rounded shadow-xl"
             value={input}
             loading={isLoading}
             onChange={handleInputChange}
