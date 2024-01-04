@@ -6,6 +6,7 @@ import { ScrollToAnchor } from "@/components/ScrollToAnchor";
 import { cn } from "@/lib/utils";
 import { useChat } from "ai/react";
 import { useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function Chat() {
   const searchParams = useSearchParams();
@@ -27,6 +28,18 @@ export default function Chat() {
       body: {
         tenantId: tenantId,
         websiteUrl: websiteUrl,
+      },
+      onError: (err) => {
+        toast.error(err.message, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       },
     });
 

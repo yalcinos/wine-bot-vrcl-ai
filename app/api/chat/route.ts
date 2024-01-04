@@ -1,10 +1,11 @@
 import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
-import { MessageArraySchema } from "@/lib/validators/message";
+// import { MessageArraySchema } from "@/lib/validators/message";
 import { Commerce7API } from "@/lib/commerce7-api";
 import { chatbotPromptv3 } from "@/lib/prompts/chatbot-prompt-v3";
-import { ChatGPTMessage } from "@/types";
+// import { ChatGPTMessage } from "@/types";
 import { NextResponse } from "next/server";
+import { rateLimitRequest } from "@/lib/rate-limit";
 
 // Create an OpenAI API client (that's edge friendly!)
 const openai = new OpenAI({
@@ -16,6 +17,31 @@ export const runtime = "edge";
 
 export async function POST(req: Request) {
   try {
+    if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+      const ip = req.headers.get("x-forwarded-for");
+
+      // Use the rate limiter function
+      const { success, limit, reset, remaining } = await rateLimitRequest(ip);
+      console.log({ success });
+      if (!success) {
+        return new Response(
+          "You have reached your request limit for the day.",
+          {
+            status: 429,
+            headers: {
+              "X-RateLimit-Limit": limit.toString(),
+              "X-RateLimit-Remaining": remaining.toString(),
+              "X-RateLimit-Reset": reset.toString(),
+            },
+          }
+        );
+      }
+    } else {
+      console.log(
+        "KV_REST_API_URL and KV_REST_API_TOKEN env vars not found, not rate limiting..."
+      );
+    }
+
     const { messages, tenantId, websiteUrl } = await req.json();
     console.log("This is post,", tenantId, websiteUrl);
     // const parsedMessages = MessageArraySchema.parse(messages);
