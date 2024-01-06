@@ -22,14 +22,14 @@ export const wineProductData = (productInfos: any, websiteUrl: string) => {
                 })}
                 <availability>in stock</availability>
                 </wine> 
-            </product>`;
+            </product>\n`;
   });
 
   return `
         <url>
         <location>${websiteUrl}</location>
         <description>Your wine store</description>
-        ${products}
+        ${products.join(" ")}
         </url>
 `;
 };
