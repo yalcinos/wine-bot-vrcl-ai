@@ -52,8 +52,12 @@ export async function POST(req: Request) {
     //   };
     // });
 
+    const currentDate = new Date();
+    const date = currentDate.toISOString().split("T")[0];
+    console.log({ date });
     const reservationQueryParams: Record<string, string> = {
       status: "in:Incomplete,Reserved,Paid,Checked In,No Show,Hold",
+      reservationDate: `gte:${date}`,
     };
 
     // Only include customerId if it is defined
