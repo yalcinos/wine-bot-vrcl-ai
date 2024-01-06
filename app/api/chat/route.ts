@@ -54,11 +54,9 @@ export async function POST(req: Request) {
 
     const products = await Commerce7API(tenantId, "v1/product");
 
-    const productInfos = products;
-    console.log({ productInfos });
     await messages.unshift({
       role: "system",
-      content: chatbotPromptv3(productInfos, websiteUrl),
+      content: chatbotPromptv3(products, websiteUrl),
     });
 
     // Ask OpenAI for a streaming chat completion given the prompt
