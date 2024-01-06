@@ -7,7 +7,6 @@ import { chatbotPromptv3 } from "@/lib/prompts/chatbot-prompt-v3";
 import { NextResponse } from "next/server";
 import { rateLimitRequest } from "@/lib/rate-limit";
 
-// Create an OpenAI API client (that's edge friendly!)
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
 });
@@ -42,8 +41,8 @@ export async function POST(req: Request) {
       );
     }
 
-    const { messages, tenantId, websiteUrl } = await req.json();
-    console.log("This is post,", tenantId, websiteUrl);
+    const { messages, tenantId, websiteUrl, customerId } = await req.json();
+    console.log("This is post,", tenantId, websiteUrl, customerId);
     // const parsedMessages = MessageArraySchema.parse(messages);
     // const parsedMessages = console.log("Test post", messages, tenantId);
     // const outboundMessages: ChatGPTMessage[] = parsedMessages.map((message) => {
@@ -53,14 +52,15 @@ export async function POST(req: Request) {
     //   };
     // });
 
-    const commerce7Response = await Commerce7API(tenantId);
+    const products = await Commerce7API(tenantId, "v1/product");
 
-    const productInfos = await commerce7Response.json();
-
+    const productInfos = products;
+    console.log({ productInfos });
     await messages.unshift({
       role: "system",
       content: chatbotPromptv3(productInfos, websiteUrl),
     });
+
     // Ask OpenAI for a streaming chat completion given the prompt
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo-1106",
