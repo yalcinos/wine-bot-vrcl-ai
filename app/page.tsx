@@ -28,18 +28,11 @@ export default function Chat() {
       body: {
         tenantId: tenantId,
         websiteUrl: websiteUrl,
+        customerId: customerId,
       },
       onError: (err) => {
-        toast.error(err.message, {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        console.log({ err });
+        toast.error(err.message);
       },
     });
 
@@ -61,7 +54,7 @@ export default function Chat() {
       <div className="flex flex-col max-w-md mx-auto">
         <form onSubmit={handleSubmit}>
           <ChatInput
-            className="flex disabled:opacity-50 fixed bottom-0 w-full max-w-md p-2  rounded shadow-xl"
+            className="flex disabled:opacity-50 fixed bottom-0 w-full max-w-md p-2 rounded shadow-xl"
             value={input}
             loading={isLoading}
             onChange={handleInputChange}
