@@ -1,11 +1,13 @@
 import { Buffer } from "buffer";
 
-export async function Commerce7API(tenantId: string, endpoint: string) {
+export async function Commerce7API(
+  tenantId: string,
+  endpoint: string,
+  queryParams?: Record<string, string>
+) {
   const headers = createHeaders(tenantId);
-  const response = await fetchData(
-    `https://api.commerce7.com/${endpoint}`,
-    headers
-  );
+  const url = buildUrl(`https://api.commerce7.com/${endpoint}`, queryParams);
+  const response = await fetchData(url, headers);
 
   return response.json();
 }
@@ -43,4 +45,20 @@ async function fetchData(url: string, headers: Headers): Promise<Response> {
     console.error("Error fetching data:", error);
     throw error;
   }
+}
+
+function buildUrl(
+  baseUrl: string,
+  queryParams?: Record<string, string>
+): string {
+  if (!queryParams) {
+    return baseUrl;
+  }
+
+  const url = new URL(baseUrl);
+  Object.entries(queryParams).forEach(([key, value]) => {
+    url.searchParams.append(key, value);
+  });
+
+  return url.toString();
 }

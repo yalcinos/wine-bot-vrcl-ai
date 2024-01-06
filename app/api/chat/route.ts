@@ -52,8 +52,22 @@ export async function POST(req: Request) {
     //   };
     // });
 
-    const products = await Commerce7API(tenantId, "v1/product");
+    const reservationQueryParams: Record<string, string> = {
+      status: "in:Incomplete,Reserved,Paid,Checked In,No Show,Hold",
+    };
 
+    // Only include customerId if it is defined
+    if (customerId) {
+      reservationQueryParams.customerId = customerId;
+    }
+    const products = await Commerce7API(tenantId, "v1/product");
+    const reservations = await Commerce7API(
+      tenantId,
+      "v1/reservation",
+      reservationQueryParams
+    );
+
+    console.log("test reservation response", reservations);
     await messages.unshift({
       role: "system",
       content: chatbotPromptv3(products, websiteUrl),
