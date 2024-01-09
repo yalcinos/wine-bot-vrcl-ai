@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { OpenAIStream, StreamingTextResponse } from "ai";
+import { OpenAIStream, StreamingTextResponse, nanoid } from "ai";
 // import { MessageArraySchema } from "@/lib/validators/message";
 import { Commerce7API } from "@/lib/commerce7-api";
 import { chatbotPromptv3 } from "@/lib/prompts/chatbot-prompt-v3";
@@ -7,6 +7,7 @@ import { chatbotPromptv3 } from "@/lib/prompts/chatbot-prompt-v3";
 import { NextResponse } from "next/server";
 import { rateLimitRequest } from "@/lib/rate-limit";
 import { kv } from "@vercel/kv";
+import { setCookie, getCookie } from "@/app/actions";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
@@ -19,7 +20,7 @@ export async function POST(req: Request) {
   try {
     if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
       const ip = req.headers.get("x-forwarded-for");
-
+      await setCookie();
       // Use the rate limiter function
       const { success, limit, reset, remaining } = await rateLimitRequest(ip);
 
@@ -42,16 +43,12 @@ export async function POST(req: Request) {
       );
     }
 
-    const { messages, tenantId, websiteUrl, customerId } = await req.json();
+    const json = await req.json();
+    const { messages, tenantId, websiteUrl, customerId, id } = json;
 
-    const key = JSON.stringify(messages); // come up with a key based on the request
+    const userId = tenantId;
+
     console.log("This is post,", tenantId, websiteUrl, customerId);
-
-    const cached = await kv.get(key);
-
-    if (cached) {
-      return new Response(cached as any);
-    }
 
     // const parsedMessages = MessageArraySchema.parse(messages);
     // const parsedMessages = console.log("Test post", messages, tenantId);
@@ -64,7 +61,6 @@ export async function POST(req: Request) {
 
     const currentDate = new Date();
     const date = currentDate.toISOString().split("T")[0];
-
     const reservationQueryParams: Record<string, string> = {
       status: "in:Incomplete,Reserved,Paid,Checked In,No Show,Hold",
       reservationDate: `gte:${date}`,
@@ -97,12 +93,28 @@ export async function POST(req: Request) {
 
     // Convert the response into a friendly text-stream
     const stream = OpenAIStream(response, {
-      async onFinal(completion) {
-        // Cache the response. Note that this will also cache function calls.
-        console.log("yess", completion);
+      async onCompletion(completion) {
+        const cookie = await getCookie();
 
-        await kv.set(key, completion);
-        await kv.expire(key, 60 * 60);
+        const title = json.messages[0].content.substring(0, 100);
+        const id = json.id ?? cookie?.value;
+        const createdAt = Date.now();
+        const path = `/chat/${id}`;
+        const payload = {
+          id,
+          title,
+          createdAt,
+          path,
+          messages: [
+            ...messages,
+            {
+              content: completion,
+              role: "assistant",
+            },
+          ],
+        };
+
+        await kv.hset(`chat:${id}`, payload);
       },
     });
     // Respond with the stream

@@ -3,10 +3,10 @@ import { Card, CardBody } from "@nextui-org/react";
 import { ChatGPTMessage } from "@/types";
 import MarkdownLite from "./MarkdownLite";
 import { cn } from "@/lib/utils";
-
+import { type Message } from "ai";
 interface ChatBubbleProps {
   className?: string;
-  message: ChatGPTMessage;
+  message: Message;
 }
 
 const ChatBubble: React.FC<ChatBubbleProps> = (props) => {
