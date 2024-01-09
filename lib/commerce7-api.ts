@@ -40,10 +40,6 @@ async function fetchData(url: string, headers: Headers): Promise<Response> {
       headers: headers,
     });
 
-    // if (!response.ok) {
-    //   throw new Error(`HTTP error! Status: ${response.status}`);
-    // }
-
     return response;
   } catch (error) {
     console.error("Error fetching data:", error);
