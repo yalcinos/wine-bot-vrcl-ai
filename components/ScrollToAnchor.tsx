@@ -13,7 +13,7 @@ export function ScrollToAnchor({ trackVisibility }: ChatScrollAnchorProps) {
   const isAtBottom = useAtBottom();
 
   const { ref, entry, inView } = useInView({
-    root: document as any,
+    root: window.document as any,
     trackVisibility,
     threshold: 1,
     delay: 100,

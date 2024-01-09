@@ -1,16 +1,13 @@
 import Chat from "@/components/Chat";
-import { getChat } from "./actions";
+import { getChat } from "../actions";
 import { cookies, headers } from "next/headers";
 
-export default async function ChatPage(searchParams: {
-  [key: string]: string | string[] | undefined;
-}) {
+export default async function ChatPage() {
   const cookie = cookies().get("yt_wine_bot_token");
   const headersList = headers();
   const referer = headersList.get("referer");
   console.log("referer", referer);
 
-  console.log("-------searcg params", searchParams);
   const chat = await getChat(cookie?.value);
 
   if (!chat) {
