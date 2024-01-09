@@ -18,7 +18,10 @@ export async function setCookie() {
 
   if (!cookie) {
     // Set cookie
-    cookies().set("yt_wine_bot_token", nanoid(), { sameSite: "none" });
+    cookies().set("yt_wine_bot_token", nanoid(), {
+      sameSite: "none",
+      secure: true,
+    });
   }
 }
 
