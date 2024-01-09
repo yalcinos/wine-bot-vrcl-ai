@@ -6,23 +6,19 @@ import { ScrollToAnchor } from "@/components/ScrollToAnchor";
 import { cn } from "@/lib/utils";
 import { type Message, useChat } from "ai/react";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+
 import { toast } from "react-toastify";
 
 export interface ChatProps extends React.ComponentProps<"div"> {
   initialMessages?: Message[];
   id?: string;
+  websiteUrl: string | null;
 }
-export default function Chat({ id, initialMessages }: ChatProps) {
+export default function Chat({ id, initialMessages, websiteUrl }: ChatProps) {
   const searchParams = useSearchParams();
 
   const tenantId = searchParams.get("tenantId");
   const customerId = searchParams.get("customerId");
-
-  const websiteUrl =
-    window.location != window.parent.location
-      ? document.referrer
-      : document.location.href;
 
   //useChat is a utility to allow you to easily create a conversational user interface for your chatbot application. It enables the streaming of chat messages from your AI provider, manages the state for chat input, and updates the UI automatically as new messages are received.
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
@@ -32,7 +28,7 @@ export default function Chat({ id, initialMessages }: ChatProps) {
       body: {
         id,
         tenantId: tenantId,
-        websiteUrl: websiteUrl,
+        websiteUrl,
         customerId: customerId,
       },
       onError: (err) => {
