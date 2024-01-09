@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardBody } from "@nextui-org/react";
-import { ChatGPTMessage } from "@/types";
+
 import MarkdownLite from "./MarkdownLite";
 import { cn } from "@/lib/utils";
 import { type Message } from "ai";
