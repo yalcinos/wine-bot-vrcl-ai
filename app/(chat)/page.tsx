@@ -1,9 +1,9 @@
 import Chat from "@/components/Chat";
-import { getChat } from "../actions";
-import { cookies, headers } from "next/headers";
+import { getChat, getCookie } from "../actions";
+import { headers } from "next/headers";
 
 export default async function ChatPage() {
-  const cookie = cookies().get("yt_wine_bot_token");
+  const cookie = await getCookie();
   const headersList = headers();
   const referer = headersList.get("referer");
   console.log("referer", referer);
