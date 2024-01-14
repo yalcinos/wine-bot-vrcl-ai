@@ -29,23 +29,25 @@ async function get_reservations(
     reservationDate: dateRange,
   });
 
-  if (reservations && reservations.total > 0) {
-    response = reservations.reservations;
+  if (!reservations || reservations.total === 0) {
+    return null;
   }
 
-  const getReservationResponse = response?.map((reservation: any) => {
-    if (reservation) {
-      return {
-        reservationNumber: reservation.reservationNumber,
-        guestCount: reservation.guestCount,
-        firstName: reservation.customer.firstName,
-        reservationAddress: reservation.inventoryLocation.address,
-        reservationCity: reservation.inventoryLocation.city,
-        reservationState: reservation.inventoryLocation.state,
-        // customer: `${reservation.guestCount} guests for ${reservation.customer.firstName} ${reservation.customer.lastName}`,
-      };
-    } else return null;
-  });
+  const getReservationResponse = reservations?.reservations?.map(
+    (reservation: any) => {
+      if (reservation) {
+        return {
+          reservationNumber: reservation.reservationNumber,
+          guestCount: reservation.guestCount,
+          firstName: reservation.customer.firstName,
+          reservationAddress: reservation.inventoryLocation.address,
+          reservationCity: reservation.inventoryLocation.city,
+          reservationState: reservation.inventoryLocation.state,
+          // customer: `${reservation.guestCount} guests for ${reservation.customer.firstName} ${reservation.customer.lastName}`,
+        };
+      } else return null;
+    }
+  );
 
   return getReservationResponse;
 }
