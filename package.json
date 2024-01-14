@@ -13,7 +13,7 @@
     "@nextui-org/react": "^2.2.9",
     "@upstash/ratelimit": "^1.0.0",
     "@vercel/kv": "^1.0.1",
-    "ai": "2.2.30",
+    "ai": "^2.2.31",
     "framer-motion": "^10.16.16",
     "next": "14.0.3",
     "openai": "4.16.1",
