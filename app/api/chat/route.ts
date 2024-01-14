@@ -3,11 +3,11 @@ import { OpenAIStream, StreamingTextResponse, nanoid } from "ai";
 // import { MessageArraySchema } from "@/lib/validators/message";
 import { Commerce7API } from "@/lib/commerce7-api";
 import { chatbotPromptv3 } from "@/lib/prompts/chatbot-prompt-v3";
-// import { ChatGPTMessage } from "@/types";
 import { NextResponse } from "next/server";
 import { rateLimitRequest } from "@/lib/rate-limit";
 import { kv } from "@vercel/kv";
 import { setCookie, getCookie } from "@/app/actions";
+import { functions, runFunction } from "./functions";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
@@ -45,8 +45,7 @@ export async function POST(req: Request) {
 
     const json = await req.json();
     const { messages, tenantId, websiteUrl, customerId, id } = json;
-
-    const userId = tenantId;
+    console.log({ tenantId, customerId });
 
     console.log("This is post,", tenantId, websiteUrl, customerId);
 
@@ -62,8 +61,9 @@ export async function POST(req: Request) {
     const currentDate = new Date();
     const date = currentDate.toISOString().split("T")[0];
     const reservationQueryParams: Record<string, string> = {
+      tenantId: tenantId,
       status: "in:Incomplete,Reserved,Paid,Checked In,No Show,Hold",
-      reservationDate: `gte:${date}`,
+      dateRange: `gte:${date}`,
     };
 
     // Only include customerId if it is defined
@@ -71,11 +71,6 @@ export async function POST(req: Request) {
       reservationQueryParams.customerId = customerId;
     }
     const products = await Commerce7API(tenantId, "v1/product");
-    const reservations = await Commerce7API(
-      tenantId,
-      "v1/reservation",
-      reservationQueryParams
-    );
 
     await messages.unshift({
       role: "system",
@@ -87,13 +82,41 @@ export async function POST(req: Request) {
       model: "gpt-3.5-turbo-1106",
       stream: true,
       messages,
+      tools: functions,
+      tool_choice: "auto",
       n: 1,
       temperature: 0.1,
     });
 
     // Convert the response into a friendly text-stream
     const stream = OpenAIStream(response, {
-      async onCompletion(completion) {
+      experimental_onToolCall: async ({ tools }, appendToolCallMessage) => {
+        let result;
+
+        // const testArgs = {
+        //   tenantId: tenantId,
+        //   status: "in:Incomplete,Reserved,Paid,Checked In,No Show,Hold",
+        //   dateRange: `gte:2024-01-06`,
+        // };
+
+        for (const tool of tools) {
+          result = await runFunction(tool.func.name, reservationQueryParams);
+          appendToolCallMessage({
+            tool_call_id: tool.id,
+            function_name: tool.func.name,
+            tool_call_result: result,
+          });
+        }
+
+        return openai.chat.completions.create({
+          model: "gpt-3.5-turbo-1106",
+          stream: true,
+          tools: functions,
+          tool_choice: "auto",
+          messages: [...messages, ...appendToolCallMessage()],
+        });
+      },
+      async onFinal(completion) {
         const cookie = await getCookie();
 
         const title = json.messages[0].content.substring(0, 100);
