@@ -37,13 +37,11 @@ async function get_reservations(
     (reservation: any) => {
       if (reservation) {
         return {
-          reservationNumber: reservation.reservationNumber,
-          guestCount: reservation.guestCount,
-          firstName: reservation.customer.firstName,
-          reservationAddress: reservation.inventoryLocation.address,
-          reservationCity: reservation.inventoryLocation.city,
-          reservationState: reservation.inventoryLocation.state,
-          // customer: `${reservation.guestCount} guests for ${reservation.customer.firstName} ${reservation.customer.lastName}`,
+          no: reservation.reservationNumber,
+          "# guest": reservation.guestCount,
+          name: reservation.customer.firstName,
+          address: reservation.inventoryLocation.address,
+          city: reservation.inventoryLocation.city,
         };
       } else return null;
     }
