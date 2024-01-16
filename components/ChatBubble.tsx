@@ -1,9 +1,10 @@
 import React from "react";
 import { Card, CardBody } from "@nextui-org/react";
-
-import MarkdownLite from "./MarkdownLite";
+import remarkGfm from "remark-gfm";
+import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import { type Message } from "ai";
+
 interface ChatBubbleProps {
   className?: string;
   message: Message;
@@ -31,13 +32,29 @@ const ChatBubble: React.FC<ChatBubbleProps> = (props) => {
           })}
         >
           <div
-            className={cn(" space-y-2 max-w-xs mx-2 overflow-x-hidden", {
+            className={cn("space-y-2 max-w-xs mx-2 overflow-x-hidden", {
               "items-end": isAsistant,
               "items-start": !isAsistant,
             })}
           >
             <div>
-              <MarkdownLite text={message.content} />
+              <ReactMarkdown
+                className="prose mt-1 w-full break-words prose-p:leading-relaxed"
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  // open links in new tab
+                  a: (props) => (
+                    <a
+                      {...props}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="break-words underline underline-offset-2 text-blue-600"
+                    />
+                  ),
+                }}
+              >
+                {message.content}
+              </ReactMarkdown>
             </div>
           </div>
         </div>
