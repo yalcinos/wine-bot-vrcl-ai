@@ -6,7 +6,7 @@ export const functions: any[] = [
     function: {
       name: "get_reservations",
       description:
-        "Get the reservation list, if you can't get it return sorry message",
+        "Get the reservation list, if you can not find any reservation say sory",
       parameters: {
         type: "object",
         properties: {},

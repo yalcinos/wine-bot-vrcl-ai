@@ -48,7 +48,7 @@ export default function Chat({ id, initialMessages, websiteUrl }: ChatProps) {
   console.log("Iam messages", messages);
   return (
     <div className="overflow-y-hidden">
-      <div className="max-w-md h-[90vh] pt-8 mx-auto overflow-y-auto">
+      <div className="max-w-lg h-[90vh] pt-8 mx-auto overflow-y-auto">
         {messages.length &&
           messages.map((message, index) => (
             <div
@@ -62,10 +62,10 @@ export default function Chat({ id, initialMessages, websiteUrl }: ChatProps) {
           ))}
         <ScrollToAnchor trackVisibility={isLoading} />
       </div>
-      <div className="flex flex-col max-w-md mx-auto">
+      <div className="flex flex-col max-w-lg mx-auto">
         <form onSubmit={handleSubmit}>
           <ChatInput
-            className="flex disabled:opacity-50 fixed bottom-0 w-full max-w-md p-2 rounded shadow-xl"
+            className="flex disabled:opacity-50 fixed bottom-0 w-full max-w-lg p-2 rounded shadow-xl"
             value={input}
             loading={isLoading}
             onChange={handleInputChange}
