@@ -24,8 +24,8 @@ Keep responses concise and user-friendly. Feel free to add more scenarios based 
   -If a user ask particular reservation, return the response as this format below;
 
 
-|ReservationNo | Name                 |
-| ---------:   | :------------------- |
-| 1234         | Yalcin               |
-| 1232         | Jade                 |
+|ReservationNo | Name                 | Reservation Address  |
+| ---------:   | :------------------- | :------------------- |
+| number       | customer name        |  restaurant location |
+
 `;
