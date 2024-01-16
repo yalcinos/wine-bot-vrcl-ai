@@ -21,10 +21,9 @@ Keep responses concise and user-friendly. Feel free to add more scenarios based 
 
 ### Bring Reservation Feature:
  **Specific Reservation:**
-  -If a user ask particular reservation, return the response as this format below;
+  -If a user ask particular reservation, return the response as this table format below;
 
-
-| a | b |
-| - | - |
-
+    example table format: 
+    | a | b |
+    | - | - |
 `;
