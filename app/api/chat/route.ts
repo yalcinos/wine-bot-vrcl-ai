@@ -44,19 +44,7 @@ export async function POST(req: Request) {
     }
 
     const json = await req.json();
-    const { messages, tenantId, websiteUrl, customerId, id } = json;
-    console.log({ tenantId, customerId });
-
-    console.log("This is post,", tenantId, websiteUrl, customerId);
-
-    // const parsedMessages = MessageArraySchema.parse(messages);
-    // const parsedMessages = console.log("Test post", messages, tenantId);
-    // const outboundMessages: ChatGPTMessage[] = parsedMessages.map((message) => {
-    //   return {
-    //     role: message.isUserMessage ? "user" : "system",
-    //     content: message.text,
-    //   };
-    // });
+    let { messages, tenantId, websiteUrl, customerId } = json;
 
     const currentDate = new Date();
     const date = currentDate.toISOString().split("T")[0];
@@ -66,6 +54,12 @@ export async function POST(req: Request) {
       dateRange: `gte:${date}`,
     };
 
+    //set customer id for dev mode
+    customerId =
+      process.env.APP_MODE === "development"
+        ? process.env.APP_DEMO_CLIENT_ID
+        : customerId;
+
     // Only include customerId if it is defined
     if (customerId) {
       reservationQueryParams.customerId = customerId;
@@ -74,7 +68,12 @@ export async function POST(req: Request) {
 
     await messages.unshift({
       role: "system",
-      content: chatbotPromptv3(products, websiteUrl),
+      content: chatbotPromptv3(
+        products,
+        process.env.APP_MODE === "development"
+          ? process.env.APP_DEMO_URL
+          : websiteUrl
+      ),
     });
 
     // Ask OpenAI for a streaming chat completion given the prompt
@@ -93,14 +92,10 @@ export async function POST(req: Request) {
       experimental_onToolCall: async ({ tools }, appendToolCallMessage) => {
         let result;
 
-        // const testArgs = {
-        //   tenantId: tenantId,
-        //   status: "in:Incomplete,Reserved,Paid,Checked In,No Show,Hold",
-        //   dateRange: `gte:2024-01-06`,
-        // };
-
         for (const tool of tools) {
           result = await runFunction(tool.func.name, reservationQueryParams);
+
+          //This method doesn't append function name (BUG?)
           appendToolCallMessage({
             tool_call_id: tool.id,
             function_name: tool.func.name,
@@ -118,16 +113,15 @@ export async function POST(req: Request) {
       },
       async onFinal(completion) {
         const cookie = await getCookie();
-
+        console.log("xxxx", cookie);
         const title = json.messages[0].content.substring(0, 100);
-        const id = json.id ?? cookie?.value;
+        const id = cookie?.value;
         const createdAt = Date.now();
-        const path = `/chat/${id}`;
+
         const payload = {
           id,
           title,
           createdAt,
-          path,
           messages: [
             ...messages,
             {

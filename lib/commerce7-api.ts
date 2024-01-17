@@ -22,7 +22,14 @@ function createHeaders(tenantId: string) {
     process.env.APP_USERNAME as any,
     process.env.APP_PASSWORD as any
   );
-  headers.set("tenant", `${tenantId}` || "spectrawinery");
+
+  headers.set(
+    "tenant",
+    process.env.APP_MODE === "development"
+      ? "yalcin-sandbox-account"
+      : `${tenantId}`
+  );
+
   headers.set("Authorization", `Basic ${base64Credentials}`);
   headers.set("Content-Type", "application/json");
 

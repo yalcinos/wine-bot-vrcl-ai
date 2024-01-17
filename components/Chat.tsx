@@ -4,7 +4,6 @@ import ChatBubble from "@/components/ChatBubble";
 import ChatInput from "@/components/ChatInput";
 import { ScrollToAnchor } from "@/components/ScrollToAnchor";
 import { cn } from "@/lib/utils";
-import { FunctionCallHandler, ToolCallHandler } from "ai";
 import { type Message, useChat } from "ai/react";
 import { useSearchParams } from "next/navigation";
 
@@ -21,20 +20,12 @@ export default function Chat({ id, initialMessages, websiteUrl }: ChatProps) {
   const tenantId = searchParams.get("tenantId");
   const customerId = searchParams.get("customerId");
 
-  // const functionCallHandler: ToolCallHandler = async (
-  //   chatMessages,
-  //   functionCall
-  // ) => {
-
-  // };
-
   //useChat is a utility to allow you to easily create a conversational user interface for your chatbot application. It enables the streaming of chat messages from your AI provider, manages the state for chat input, and updates the UI automatically as new messages are received.
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
       initialMessages,
       id,
       body: {
-        id,
         tenantId: tenantId,
         websiteUrl,
         customerId: customerId,
@@ -43,9 +34,8 @@ export default function Chat({ id, initialMessages, websiteUrl }: ChatProps) {
         console.log({ err });
         toast.error(err.message);
       },
-      // experimental_onToolCall: functionCallHandler,
     });
-  console.log("Iam messages", messages);
+
   return (
     <div className="overflow-y-hidden">
       <div className="max-w-lg h-[90vh] pt-8 mx-auto overflow-y-auto">

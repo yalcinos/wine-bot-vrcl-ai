@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Card, CardBody } from "@nextui-org/react";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
@@ -10,6 +10,10 @@ interface ChatBubbleProps {
   message: Message;
 }
 
+interface CustomTableProps {
+  children: ReactNode;
+}
+
 const ChatBubble: React.FC<ChatBubbleProps> = (props) => {
   const { message } = props;
   const isAsistant = message.role === "assistant";
@@ -17,6 +21,15 @@ const ChatBubble: React.FC<ChatBubbleProps> = (props) => {
     message.role === "assistant"
       ? "float-left bg-gray-200 text-black"
       : "float-right bg-blue-400 text-white";
+
+  const CustomTable: React.FC<CustomTableProps> = ({ children }) => {
+    // Your custom table styling or modifications can go here
+    return (
+      <table className="table-auto mt-3 border-collapse border border-gray-300">
+        {children}
+      </table>
+    );
+  };
 
   return (
     <Card
@@ -43,6 +56,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = (props) => {
                 remarkPlugins={[remarkGfm]}
                 components={{
                   // open links in new tab
+                  table: CustomTable as any,
                   a: (props) => (
                     <a
                       {...props}
