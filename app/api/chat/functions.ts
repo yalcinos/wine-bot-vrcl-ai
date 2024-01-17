@@ -21,8 +21,6 @@ async function get_reservations(
   status: string,
   dateRange: string
 ) {
-  console.log("lol", tenantId, customerId, status, dateRange);
-  let response;
   const reservations = await Commerce7API(tenantId, "v1/reservation", {
     customerId: customerId,
     status: status,
@@ -43,7 +41,6 @@ async function get_reservations(
           address: reservation.inventoryLocation.address,
           city: reservation.inventoryLocation.city,
           state: reservation.inventoryLocation.state,
-          // customer: `${reservation.guestCount} guests for ${reservation.customer.firstName} ${reservation.customer.lastName}`,
         };
       } else return null;
     }

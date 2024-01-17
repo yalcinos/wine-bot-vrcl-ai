@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 export default async function ChatPage() {
   const cookie = await getCookie();
   const headersList = headers();
+  //get the website url
   const referer = headersList.get("referer");
   console.log("referer", referer);
 
