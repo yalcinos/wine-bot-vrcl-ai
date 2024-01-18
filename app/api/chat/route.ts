@@ -88,7 +88,11 @@ export async function POST(req: Request) {
         let result;
 
         for (const tool of tools) {
-          if (tool.func.name === "get_wine_product_information") {
+          if (
+            tool.func.name === "get_wine_product_information" ||
+            tool.func.name === "add_product_to_cart"
+          ) {
+            console.log("YAY!", tool.func.name);
             result = await runFunction(tool.func.name, {
               tenantId: tenantId,
               websiteUrl:
