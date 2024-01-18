@@ -29,7 +29,7 @@ export const functions: any[] = [
     function: {
       name: "add_product_to_cart",
       description:
-        "Add wine product to the cart by generating a specific url for the user. The link format will be [Add to Cart](http://example/?addToCart=example_sku_noC&quantity=example_quantity_number",
+        "Add wine product to the cart by generating a specific url for the user",
       parameters: {
         type: "object",
         properties: {},
@@ -70,14 +70,21 @@ async function get_wine_product_information(
   return wineProductData(products, websiteUrl);
 }
 
-// async function add_product_to_cart(tenantId: string, websiteUrl: string) {
-//   const products = await Commerce7API(tenantId, "v1/product");
-//   let obj = {};
+async function add_product_to_cart(tenantId: string, websiteUrl: string) {
+  const products = await Commerce7API(tenantId, "v1/product");
+  // console.log({ products });
+  let obj = {} as any;
+  products.products.forEach((product: any) => {
+    product.variants.forEach((variants: any) => {
+      obj["sku"] = variants.sku;
+      obj["quantity"] = 1;
+    });
+  });
 
-//   // console.log("hello products", products);
-//   console.log({ websiteUrl });
-//   return wineProductData(products, websiteUrl);
-// }
+  const cartLinkFormat = `${websiteUrl}?addToCart=${obj.sku}C&quantity=1`;
+  console.log("hello add_product_to_cart", obj, cartLinkFormat);
+  return cartLinkFormat;
+}
 
 // async function multi_function(tenantId: string, websiteUrl: string) {
 //   const products = await Commerce7API(tenantId, "v1/product");
@@ -127,6 +134,8 @@ export async function runFunction(name: string, args: any) {
         args["tenantId"],
         args["websiteUrl"]
       );
+    case "add_product_to_cart":
+      return await add_product_to_cart(args["tenantId"], args["websiteUrl"]);
     case "get_reservations":
       return await get_reservations(
         args["tenantId"],
