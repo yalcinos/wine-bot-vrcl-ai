@@ -64,16 +64,11 @@ export async function POST(req: Request) {
     if (customerId) {
       reservationQueryParams.customerId = customerId;
     }
-    const products = await Commerce7API(tenantId, "v1/product");
+    // const products = await Commerce7API(tenantId, "v1/product");
 
     await messages.unshift({
       role: "system",
-      content: chatbotPromptv3(
-        products,
-        process.env.APP_MODE === "development"
-          ? process.env.APP_DEMO_URL
-          : websiteUrl
-      ),
+      content: chatbotPromptv3(),
     });
 
     // Ask OpenAI for a streaming chat completion given the prompt
@@ -93,7 +88,16 @@ export async function POST(req: Request) {
         let result;
 
         for (const tool of tools) {
-          result = await runFunction(tool.func.name, reservationQueryParams);
+          if (tool.func.name === "get_wine_product_information") {
+            result = await runFunction(tool.func.name, {
+              tenantId: tenantId,
+              websiteUrl:
+                process.env.APP_MODE === "development"
+                  ? process.env.APP_DEMO_URL
+                  : websiteUrl,
+            });
+          } else
+            result = await runFunction(tool.func.name, reservationQueryParams);
 
           //This method doesn't append function name (BUG?)
           appendToolCallMessage({
@@ -113,7 +117,6 @@ export async function POST(req: Request) {
       },
       async onFinal(completion) {
         const cookie = await getCookie();
-        console.log("xxxx", cookie);
         const title = json.messages[0].content.substring(0, 100);
         const id = cookie?.value;
         const createdAt = Date.now();
