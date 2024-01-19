@@ -8,6 +8,7 @@ import { type Message, useChat } from "ai/react";
 import { useSearchParams } from "next/navigation";
 
 import { toast } from "react-toastify";
+import WelcomeMessage from "./WelcomeMessage";
 
 export interface ChatProps extends React.ComponentProps<"div"> {
   initialMessages?: Message[];
@@ -21,25 +22,36 @@ export default function Chat({ id, initialMessages, websiteUrl }: ChatProps) {
   const customerId = searchParams.get("customerId");
 
   //useChat is a utility to allow you to easily create a conversational user interface for your chatbot application. It enables the streaming of chat messages from your AI provider, manages the state for chat input, and updates the UI automatically as new messages are received.
-  const { messages, input, handleInputChange, handleSubmit, isLoading } =
-    useChat({
-      initialMessages,
-      id,
-      body: {
-        tenantId: tenantId,
-        websiteUrl,
-        customerId: customerId,
-      },
-      onError: (err) => {
-        console.log({ err });
-        toast.error(err.message);
-      },
-    });
+  const {
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+    setInput,
+  } = useChat({
+    id,
+    body: {
+      tenantId: tenantId,
+      websiteUrl,
+      customerId: customerId,
+    },
+    onError: (err) => {
+      console.log({ err });
+      toast.error(err.message);
+    },
+  });
+
+  const handleButtonClick = (buttonText: string) => {
+    // Your custom logic for handling button clicks in the parent component
+    console.log("Button clicked in parent component! Button text:", buttonText);
+    setInput(buttonText);
+  };
 
   return (
     <div className="overflow-y-hidden">
       <div className="max-w-lg h-[90vh] pt-8 mx-auto overflow-y-auto">
-        {messages.length &&
+        {messages.length ? (
           messages.map((message, index) => (
             <div
               key={index}
@@ -49,7 +61,10 @@ export default function Chat({ id, initialMessages, websiteUrl }: ChatProps) {
             >
               <ChatBubble message={message} />
             </div>
-          ))}
+          ))
+        ) : (
+          <WelcomeMessage onHandleButtonClick={handleButtonClick} />
+        )}
         <ScrollToAnchor trackVisibility={isLoading} />
       </div>
       <div className="flex flex-col max-w-lg mx-auto">
