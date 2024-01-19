@@ -8,6 +8,7 @@ import { rateLimitRequest } from "@/lib/rate-limit";
 import { kv } from "@vercel/kv";
 import { setCookie, getCookie } from "@/app/actions";
 import { functions, runFunction } from "./functions";
+import { chatbotPromptv4 } from "@/lib/prompts/chatbot-prompt-v4";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
@@ -68,7 +69,7 @@ export async function POST(req: Request) {
 
     await messages.unshift({
       role: "system",
-      content: chatbotPromptv3(),
+      content: chatbotPromptv4(),
     });
 
     // Ask OpenAI for a streaming chat completion given the prompt
@@ -90,7 +91,7 @@ export async function POST(req: Request) {
         for (const tool of tools) {
           if (
             tool.func.name === "get_wine_product_information" ||
-            tool.func.name === "add_product_to_cart"
+            tool.func.name === "get_wine_sku"
           ) {
             console.log("YAY!", tool.func.name);
             result = await runFunction(tool.func.name, {
