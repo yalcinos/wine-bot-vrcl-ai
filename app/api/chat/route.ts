@@ -69,7 +69,7 @@ export async function POST(req: Request) {
 
     await messages.unshift({
       role: "system",
-      content: chatbotPromptv4(),
+      content: chatbotPromptv3(),
     });
 
     // Ask OpenAI for a streaming chat completion given the prompt
