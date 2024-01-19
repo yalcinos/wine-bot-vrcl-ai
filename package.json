@@ -16,7 +16,7 @@
     "ai": "^2.2.31",
     "framer-motion": "^10.16.16",
     "next": "14.0.3",
-    "openai": "4.16.1",
+    "openai": "^4.24.7",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
     "react-intersection-observer": "^9.5.3",
