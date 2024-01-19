@@ -17,7 +17,7 @@ export const functions: any[] = [
     type: "function",
     function: {
       name: "get_wine_product_information",
-      description: "Get list of wine product list",
+      description: "Get list of wine product information",
       parameters: {
         type: "object",
         properties: {},
@@ -27,9 +27,10 @@ export const functions: any[] = [
   {
     type: "function",
     function: {
-      name: "add_product_to_cart",
-      description:
-        "Add wine product to the cart by generating a specific url for the user",
+      name: "get_wine_sku",
+      // description:
+      //   "Add wine product to the cart by generating a specific url by getting information from get_wine_product_information.",
+      description: "Get wine sku's list",
       parameters: {
         type: "object",
         properties: {},
@@ -65,25 +66,18 @@ async function get_wine_product_information(
   websiteUrl: string
 ) {
   const products = await Commerce7API(tenantId, "v1/product");
-  // console.log("hello products", products);
-  console.log({ websiteUrl });
+
   return wineProductData(products, websiteUrl);
 }
 
-async function add_product_to_cart(tenantId: string, websiteUrl: string) {
+async function get_wine_sku(tenantId: string, websiteUrl: string) {
   const products = await Commerce7API(tenantId, "v1/product");
-  // console.log({ products });
-  let obj = {} as any;
-  products.products.forEach((product: any) => {
-    product.variants.forEach((variants: any) => {
-      obj["sku"] = variants.sku;
-      obj["quantity"] = 1;
-    });
-  });
 
-  const cartLinkFormat = `${websiteUrl}?addToCart=${obj.sku}C&quantity=1`;
-  console.log("hello add_product_to_cart", obj, cartLinkFormat);
-  return cartLinkFormat;
+  const skus = products.products.flatMap((product: any) =>
+    product.variants.map((variant: any) => variant.sku)
+  );
+
+  return skus;
 }
 
 // async function multi_function(tenantId: string, websiteUrl: string) {
@@ -134,8 +128,8 @@ export async function runFunction(name: string, args: any) {
         args["tenantId"],
         args["websiteUrl"]
       );
-    case "add_product_to_cart":
-      return await add_product_to_cart(args["tenantId"], args["websiteUrl"]);
+    case "get_wine_sku":
+      return await get_wine_sku(args["tenantId"], args["websiteUrl"]);
     case "get_reservations":
       return await get_reservations(
         args["tenantId"],
