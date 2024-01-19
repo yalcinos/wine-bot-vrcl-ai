@@ -8,6 +8,7 @@ import { type Message } from "ai";
 interface ChatBubbleProps {
   className?: string;
   message: Message;
+  children?: ReactNode;
 }
 
 interface CustomTableProps {
@@ -15,7 +16,7 @@ interface CustomTableProps {
 }
 
 const ChatBubble: React.FC<ChatBubbleProps> = (props) => {
-  const { message } = props;
+  const { message, children } = props;
   const isAsistant = message.role === "assistant";
   const bubbleClass =
     message.role === "assistant"
@@ -70,6 +71,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = (props) => {
                 {message.content}
               </ReactMarkdown>
             </div>
+            {children}
           </div>
         </div>
       </CardBody>
