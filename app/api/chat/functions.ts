@@ -28,37 +28,13 @@ export const functions: any[] = [
     type: "function",
     function: {
       name: "get_wine_sku",
-      // description:
-      //   "Add wine product to the cart by generating a specific url by getting information from get_wine_product_information.",
-      description: "Get wine sku's list",
+      description: "Retrieve wine product sku for Add to Cart link",
       parameters: {
         type: "object",
         properties: {},
       },
     },
   },
-
-  // {
-  //   type: "function",
-  //   function: {
-  //     name: "multi_function",
-  //     description: "Call two functions in one call",
-  //     parameters: {
-  //       type: "object",
-  //       properties: {
-  //         get_wine_product_information: {
-  //           name: "get_wine_product_information",
-  //           description: "Get the wine product list",
-  //         },
-  //         add_product_to_cart: {
-  //           name: "add_product_to_cart",
-  //           description:
-  //             "Add wine product to the cart by generating a specific url for the user. The link format will be [Add to Cart](http://example/?addToCart=example_sku_noC&quantity=example_quantity_number",
-  //         },
-  //       },
-  //     },
-  //   },
-  // },
 ];
 
 async function get_wine_product_information(
@@ -76,16 +52,9 @@ async function get_wine_sku(tenantId: string, websiteUrl: string) {
   const skus = products.products.flatMap((product: any) =>
     product.variants.map((variant: any) => variant.sku)
   );
-
+  console.log({ skus });
   return skus;
 }
-
-// async function multi_function(tenantId: string, websiteUrl: string) {
-//   const products = await Commerce7API(tenantId, "v1/product");
-//   // console.log("hello products", products);
-//   console.log({ websiteUrl });
-//   return wineProductData(products, websiteUrl);
-// }
 
 async function get_reservations(
   tenantId: string,
