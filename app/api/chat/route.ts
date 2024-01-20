@@ -3,6 +3,7 @@ import { OpenAIStream, StreamingTextResponse, nanoid } from "ai";
 // import { MessageArraySchema } from "@/lib/validators/message";
 import { Commerce7API } from "@/lib/commerce7-api";
 import { chatbotPromptv3 } from "@/lib/prompts/chatbot-prompt-v3";
+import { resturantPrompt } from "@/lib/prompts/chatbot-prompt-v3";
 import { NextResponse } from "next/server";
 import { rateLimitRequest } from "@/lib/rate-limit";
 import { kv } from "@vercel/kv";
@@ -65,11 +66,14 @@ export async function POST(req: Request) {
     if (customerId) {
       reservationQueryParams.customerId = customerId;
     }
-    // const products = await Commerce7API(tenantId, "v1/product");
+    const products = await Commerce7API(tenantId, "v1/product");
+
+    const combinedPrompt =
+      chatbotPromptv3(products, websiteUrl) + "\n" + resturantPrompt();
 
     await messages.unshift({
       role: "system",
-      content: chatbotPromptv3(),
+      content: combinedPrompt,
     });
 
     // Ask OpenAI for a streaming chat completion given the prompt
@@ -101,6 +105,7 @@ export async function POST(req: Request) {
                   ? process.env.APP_DEMO_URL
                   : websiteUrl,
             });
+            console.log({ result });
           } else
             result = await runFunction(tool.func.name, reservationQueryParams);
 
