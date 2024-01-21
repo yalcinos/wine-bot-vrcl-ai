@@ -19,3 +19,23 @@
         /* Firefox */
     }
 }
+
+
+tr {
+    border-top: 1px solid #c6cbd1;
+    background: #fff;
+    text-align: center;
+}
+
+th {
+    padding: 6px 13px;
+    background: #f3f2f3;
+}
+
+td {
+    border: 1px solid #cdcbcd;
+}
+
+table tr:nth-child(2n) {
+    background: #f6f8fa;
+}

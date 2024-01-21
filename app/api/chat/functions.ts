@@ -78,7 +78,7 @@ async function get_reservations(
         return {
           // reservationNo: reservation.reservationNumber,
           guest: reservation.guestCount,
-          firstName: reservation.customer.firstName,
+          name: reservation.customer.firstName,
           address: reservation.inventoryLocation.address,
           city: reservation.inventoryLocation.city,
           // state: reservation.inventoryLocation.state,

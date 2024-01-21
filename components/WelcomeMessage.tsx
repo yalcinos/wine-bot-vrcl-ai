@@ -22,6 +22,10 @@ const BUTTON_LIST = [
     text: "Show my reservations?",
   },
 ];
+
+const WELCOME_MESSAGE =
+  "Welcome to WineBot! 🍷\n\nI'm here to assist you with:\n\n1. 🍇 Wine Recommendations\n2. 🍽️ Food Pairing\n3. 🗓️ Show upcoming Reservations\n4. 📚 Wine Knowledge\n\n";
+
 const WelcomeMessage: React.FC<WelcomeMessageProps> = (props: any) => {
   const { onHandleButtonClick } = props;
 
@@ -30,8 +34,6 @@ const WelcomeMessage: React.FC<WelcomeMessageProps> = (props: any) => {
 
     // Call the provided prop function with the button text
     onHandleButtonClick(clickedButtonText);
-
-    console.log("Button clicked! Button text:", clickedButtonText);
   };
 
   return (
@@ -40,7 +42,7 @@ const WelcomeMessage: React.FC<WelcomeMessageProps> = (props: any) => {
         message={{
           id: "1",
           role: "assistant",
-          content: "Welcome to Commerce7 AI Bot!",
+          content: WELCOME_MESSAGE,
         }}
       >
         <div>
