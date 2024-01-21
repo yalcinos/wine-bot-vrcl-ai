@@ -51,7 +51,7 @@ export default function Chat({ id, initialMessages, websiteUrl }: ChatProps) {
 
   return (
     <div className="overflow-y-hidden">
-      <div className="max-w-lg h-[90vh] pt-8 mx-auto overflow-y-auto">
+      <div className="max-w-xl h-[90vh] pt-8 mx-auto overflow-y-auto">
         {messages.length ? (
           messages.map((message, index) => (
             <div
