@@ -56,8 +56,8 @@ const ChatBubble: React.FC<ChatBubbleProps> = (props) => {
                 className="prose mt-1 w-full break-words prose-p:leading-relaxed"
                 remarkPlugins={[remarkGfm]}
                 components={{
-                  // open links in new tab
                   table: CustomTable as any,
+                  // open links in new tab
                   a: (props) => (
                     <a
                       {...props}

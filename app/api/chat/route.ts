@@ -13,7 +13,6 @@ import { rateLimitRequest } from "@/lib/rate-limit";
 import { kv } from "@vercel/kv";
 import { setCookie, getCookie } from "@/app/actions";
 import { functions, runFunction } from "./functions";
-import { chatbotPromptv4 } from "@/lib/prompts/chatbot-prompt-v4";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
