@@ -12,9 +12,11 @@ Include links in markdown format, e.g., 'Explore our wines [Special Reserve Cabe
 `;
 
 export const generateAddToCartLink = () => `
-[Context] After the wine is recommended, your second mission is to ask user to add the recommended propduct to cart. If user answer yes,  get the wine's sku list and generate an "Add to Cart" link for the specific wine product that has been recommended to a user. Your goal is to create the link in this format: [Add to Cart](https://www.example.com/?addToCart=sku&quantity=1), where 'sku' should match the recommended wine's SKU from the WineMetadata (delimited by <sku></sku>), ensuring that the website URL is the same as the product URL.
+[Context] After the wine is recommended, your second mission is to ask user to add the recommended propduct to cart. If user answer yes,  get the wine's sku list and generate an "Add to Cart" link for the specific wine product that has been recommended to a user. Your goal is to create the link.
 
-[Example] The Add to Cart link will be 'https://spectrawinery.template.commerce7.com/?addToCart=2015C&quantity=1'.
+[Format] The Add to Cart link format will be 'https://example.com/?addToCart=sku&quantity=quantityNumber'. where 'sku' should match the recommended wine's SKU from the WineMetadata (delimited by <sku></sku>), ensuring that the website URL is the same as the product URL.
+
+[Example] Link : 'https://example.com/?addToCart=2015C&quantity=1'
 `;
 
 export const resturantPrompt = () => `
