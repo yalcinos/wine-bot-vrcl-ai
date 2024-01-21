@@ -2,8 +2,12 @@ import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse, nanoid } from "ai";
 // import { MessageArraySchema } from "@/lib/validators/message";
 import { Commerce7API } from "@/lib/commerce7-api";
-import { chatbotPromptv3 } from "@/lib/prompts/chatbot-prompt-v3";
-import { resturantPrompt } from "@/lib/prompts/chatbot-prompt-v3";
+import {
+  chatbotPromptv3,
+  generateAddToCartLink,
+  resturantPrompt,
+} from "@/lib/prompts/chatbot-prompt-v3";
+
 import { NextResponse } from "next/server";
 import { rateLimitRequest } from "@/lib/rate-limit";
 import { kv } from "@vercel/kv";
@@ -69,7 +73,11 @@ export async function POST(req: Request) {
     const products = await Commerce7API(tenantId, "v1/product");
 
     const combinedPrompt =
-      chatbotPromptv3(products, websiteUrl) + "\n" + resturantPrompt();
+      chatbotPromptv3(products, websiteUrl) +
+      "\n" +
+      generateAddToCartLink() +
+      "\n" +
+      resturantPrompt();
 
     await messages.unshift({
       role: "system",
@@ -97,7 +105,6 @@ export async function POST(req: Request) {
             tool.func.name === "get_wine_product_information" ||
             tool.func.name === "get_wine_sku"
           ) {
-            console.log("YAY!", tool.func.name);
             result = await runFunction(tool.func.name, {
               tenantId: tenantId,
               websiteUrl:
@@ -105,7 +112,6 @@ export async function POST(req: Request) {
                   ? process.env.APP_DEMO_URL
                   : websiteUrl,
             });
-            console.log({ result });
           } else
             result = await runFunction(tool.func.name, reservationQueryParams);
 
@@ -115,6 +121,8 @@ export async function POST(req: Request) {
             function_name: tool.func.name,
             tool_call_result: result,
           });
+
+          console.log("YAY!", tool.func.name);
         }
 
         return openai.chat.completions.create({
