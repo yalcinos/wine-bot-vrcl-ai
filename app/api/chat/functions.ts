@@ -76,12 +76,12 @@ async function get_reservations(
     (reservation: any) => {
       if (reservation) {
         return {
-          reservationNo: reservation.reservationNumber,
+          // reservationNo: reservation.reservationNumber,
           guest: reservation.guestCount,
           firstName: reservation.customer.firstName,
           address: reservation.inventoryLocation.address,
           city: reservation.inventoryLocation.city,
-          state: reservation.inventoryLocation.state,
+          // state: reservation.inventoryLocation.state,
         };
       } else return null;
     }
