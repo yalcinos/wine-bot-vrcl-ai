@@ -31,6 +31,7 @@ export default function Chat({ id, initialMessages, websiteUrl }: ChatProps) {
     setInput,
   } = useChat({
     id,
+    initialMessages,
     body: {
       tenantId: tenantId,
       websiteUrl,
