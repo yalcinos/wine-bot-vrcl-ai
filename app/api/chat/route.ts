@@ -1,7 +1,5 @@
 import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse, nanoid } from "ai";
-// import { MessageArraySchema } from "@/lib/validators/message";
-import { Commerce7API } from "@/lib/commerce7-api";
 import {
   chatbotPromptv3,
   generateAddToCartLink,
@@ -13,7 +11,7 @@ import { rateLimitRequest } from "@/lib/rate-limit";
 import { kv } from "@vercel/kv";
 import { setCookie, getCookie } from "@/app/actions";
 import { functions, runFunction } from "./functions";
-import { encodingForModel } from "js-tiktoken";
+// import { encodingForModel } from "js-tiktoken";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
@@ -83,7 +81,7 @@ export async function POST(req: Request) {
       content: combinedPrompt,
     });
 
-    const tiktoken = encodingForModel("gpt-3.5-turbo-1106"); // js-tiktoken
+    // const tiktoken = encodingForModel("gpt-3.5-turbo-1106"); // js-tiktoken
 
     // Ask OpenAI for a streaming chat completion given the prompt
     const response = await openai.chat.completions.create({
@@ -95,6 +93,7 @@ export async function POST(req: Request) {
       n: 1,
       temperature: 0.1,
     });
+
     let completionTokens = 0;
     // Convert the response into a friendly text-stream
     const stream = OpenAIStream(response, {
@@ -134,10 +133,10 @@ export async function POST(req: Request) {
           messages: [...messages, ...appendToolCallMessage()],
         });
       },
-      async onToken(content) {
-        const tokenList = tiktoken.encode(content);
-        completionTokens += tokenList.length;
-      },
+      // async onToken(content) {
+      //   const tokenList = tiktoken.encode(content);
+      //   completionTokens += tokenList.length;
+      // },
       async onFinal(completion) {
         const cookie = await getCookie();
         const title = json.messages[0].content.substring(0, 100);
