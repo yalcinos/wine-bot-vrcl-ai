@@ -7,7 +7,7 @@ export async function Commerce7API(
 ) {
   if (endpoint === "v1/reservation" && !queryParams?.customerId) {
     console.error("customerId is required for this endpoint");
-    return null; // or handle it in a way that suits your application
+    return null;
   }
   const headers = createHeaders(tenantId);
   const url = buildUrl(`https://api.commerce7.com/${endpoint}`, queryParams);

@@ -44,7 +44,6 @@ export default function Chat({ id, initialMessages, websiteUrl }: ChatProps) {
   });
 
   const handleButtonClick = (buttonText: string) => {
-    // Your custom logic for handling button clicks in the parent component
     console.log("Button clicked in parent component! Button text:", buttonText);
     setInput(buttonText);
   };

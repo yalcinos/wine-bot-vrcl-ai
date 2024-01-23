@@ -14,7 +14,7 @@ export const chatbotPromptv3 = () => `
 `;
 
 export const generateAddToCartLink = () => `
-[Context] After the wine is recommended, your second mission is to ask user to add the recommended wine to cart. If user answer yes, get the wine's sku list and generate an "Add to Cart" link for the specific wine product that has been recommended and send as response. Your goal is to create the link. If user decline it, adding send fallback message.
+[Context] After the wine is recommended, your second mission is to ask user to add the recommended wine to cart. If user answer yes, get the wine's sku list and generate an "Add to Cart" link for the specific wine product that has been recommended and send as response. Your goal is to create the link. If user decline it, send fallback message.
 
 [Format] The Add to Cart link format will be 'websiteUrl/?addToCart=sku&quantity=1'. where 'sku' should match the recommended wine's SKU from the WineMetadata (delimited by <sku></sku>). The websiteUrl is delimited by <location></location> in WineMetadata.
 
