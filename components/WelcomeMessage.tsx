@@ -24,7 +24,7 @@ const BUTTON_LIST = [
 ];
 
 const WELCOME_MESSAGE =
-  "Welcome to WineBot! 🍷\n\nI'm here to assist you with:\n\n1. 🍇 Wine Recommendations\n2. 🍽️ Food Pairing\n3. 🗓️ Show upcoming Reservations\n4. 📚 Wine Knowledge\n\n";
+  "Welcome to C7 WineBot! 🍷\n\nI'm here to assist you with:\n\n1. 🍇 Wine Recommendations\n2. 🍽️ Food Pairing\n3. 🗓️ Show upcoming Reservations\n4. 📚 Wine Knowledge\n\n";
 
 const WelcomeMessage: React.FC<WelcomeMessageProps> = (props: any) => {
   const { onHandleButtonClick } = props;

@@ -46,7 +46,7 @@ async function get_wine_product_information(
   return wineProductData(products, websiteUrl);
 }
 
-async function get_wine_sku(tenantId: string, websiteUrl: string) {
+async function get_wine_sku(tenantId: string) {
   const products = await Commerce7API(tenantId, "v1/product");
 
   const skus = products.products.flatMap((product: any) =>
@@ -98,7 +98,7 @@ export async function runFunction(name: string, args: any) {
         args["websiteUrl"]
       );
     case "get_wine_sku":
-      return await get_wine_sku(args["tenantId"], args["websiteUrl"]);
+      return await get_wine_sku(args["tenantId"]);
     case "get_reservations":
       return await get_reservations(
         args["tenantId"],

@@ -13,6 +13,7 @@ import { rateLimitRequest } from "@/lib/rate-limit";
 import { kv } from "@vercel/kv";
 import { setCookie, getCookie } from "@/app/actions";
 import { functions, runFunction } from "./functions";
+import { encodingForModel } from "js-tiktoken";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
@@ -69,10 +70,9 @@ export async function POST(req: Request) {
     if (customerId) {
       reservationQueryParams.customerId = customerId;
     }
-    const products = await Commerce7API(tenantId, "v1/product");
 
     const combinedPrompt =
-      chatbotPromptv3(products, websiteUrl) +
+      chatbotPromptv3() +
       "\n" +
       generateAddToCartLink() +
       "\n" +
@@ -82,6 +82,8 @@ export async function POST(req: Request) {
       role: "system",
       content: combinedPrompt,
     });
+
+    const tiktoken = encodingForModel("gpt-3.5-turbo-1106"); // js-tiktoken
 
     // Ask OpenAI for a streaming chat completion given the prompt
     const response = await openai.chat.completions.create({
@@ -93,7 +95,7 @@ export async function POST(req: Request) {
       n: 1,
       temperature: 0.1,
     });
-
+    let completionTokens = 0;
     // Convert the response into a friendly text-stream
     const stream = OpenAIStream(response, {
       experimental_onToolCall: async ({ tools }, appendToolCallMessage) => {
@@ -132,6 +134,10 @@ export async function POST(req: Request) {
           messages: [...messages, ...appendToolCallMessage()],
         });
       },
+      async onToken(content) {
+        const tokenList = tiktoken.encode(content);
+        completionTokens += tokenList.length;
+      },
       async onFinal(completion) {
         const cookie = await getCookie();
         const title = json.messages[0].content.substring(0, 100);
@@ -150,7 +156,7 @@ export async function POST(req: Request) {
             },
           ],
         };
-
+        console.log(`Token count: ${completionTokens}`);
         await kv.hset(`chat:${id}`, payload);
       },
     });
