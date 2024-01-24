@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse, nanoid } from "ai";
 import {
-  chatbotPromptv3,
+  wineProductPrompt,
   generateAddToCartLink,
   resturantPrompt,
 } from "@/lib/prompts/chatbot-prompt-v3";
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     }
 
     const combinedPrompt =
-      chatbotPromptv3() +
+      wineProductPrompt() +
       "\n" +
       generateAddToCartLink() +
       "\n" +
