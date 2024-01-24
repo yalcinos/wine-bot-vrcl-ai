@@ -10,6 +10,8 @@ export const wineProductPrompt = () => `
 
 [Format] Explore our wines [Special Reserve Cabernet](websiteUrl/special-reserve-cabernet)'. For regular text, use standard formatting. The websiteUrl is delimited by <location></location> in WineMetadata.
 
+
+Only answer wine or reservations related questions and remember to keep your responses concise, user-friendly, and politely decline if the question is unrelated.
 `;
 
 export const generateAddToCartLink = () => `
