@@ -5,15 +5,23 @@ export async function Commerce7API(
   endpoint: string,
   queryParams?: Record<string, string>
 ) {
-  if (endpoint === "v1/reservation" && !queryParams?.customerId) {
-    console.error("customerId is required for this endpoint");
+  try {
+    if (endpoint === "v1/reservation" && !queryParams?.customerId) {
+      throw new Error("customerId is required for this endpoint");
+    }
+    const headers = createHeaders(tenantId);
+    const url = buildUrl(`https://api.commerce7.com/${endpoint}`, queryParams);
+    const response = await fetchData(url, headers);
+
+    if (!response.ok) {
+      throw new Error(`API call failed with status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    console.error("An error occurred:", error.message);
     return null;
   }
-  const headers = createHeaders(tenantId);
-  const url = buildUrl(`https://api.commerce7.com/${endpoint}`, queryParams);
-  const response = await fetchData(url, headers);
-
-  return response.json();
 }
 
 function createHeaders(tenantId: string) {
